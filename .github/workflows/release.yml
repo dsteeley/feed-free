@@ -21,6 +21,8 @@ jobs:
 
       - run: npm ci
 
+      - run: npx wxt prepare
+
       # Run full test suite
       - name: Unit tests
         run: npm test
