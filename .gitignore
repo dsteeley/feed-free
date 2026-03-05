@@ -1,0 +1,17 @@
+node_modules/
+.output/
+.wxt/
+*.zip
+*.xpi
+.env
+.env.*
+!.env.example
+web-ext-artifacts/
+coverage/
+dist/
+*.log
+.DS_Store
+Thumbs.db
+.claude/
+playwright-report/
+test-results/

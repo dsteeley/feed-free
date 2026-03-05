@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>YouTube</title>
+  </head>
+  <body>
+    <!-- Home page feed -->
+    <ytd-rich-grid-renderer id="feed-grid">
+      <ytd-rich-item-renderer id="feed-item-1">
+        <div>Video 1</div>
+      </ytd-rich-item-renderer>
+      <ytd-rich-item-renderer id="feed-item-2">
+        <div>Video 2</div>
+      </ytd-rich-item-renderer>
+    </ytd-rich-grid-renderer>
+
+    <!-- Watch page secondary sidebar -->
+    <div id="secondary">
+      <ytd-watch-next-secondary-results-renderer id="watch-sidebar">
+        <div>Recommended 1</div>
+        <div>Recommended 2</div>
+      </ytd-watch-next-secondary-results-renderer>
+    </div>
+
+    <!-- Shorts shelf -->
+    <ytd-reel-shelf-renderer id="shorts-shelf">
+      <div>Short 1</div>
+    </ytd-reel-shelf-renderer>
+
+    <!-- Autoplay next -->
+    <ytd-compact-autoplay-renderer id="autoplay-next">
+      <div>Next video</div>
+    </ytd-compact-autoplay-renderer>
+
+    <!-- End screens -->
+    <div class="ytp-endscreen-content" id="end-screens">
+      <div>End screen card</div>
+    </div>
+  </body>
+</html>

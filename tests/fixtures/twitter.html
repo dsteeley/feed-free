@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Twitter / X</title>
+  </head>
+  <body>
+    <!-- Primary column with timeline -->
+    <div data-testid="primaryColumn" id="primary">
+      <div aria-label="Timeline: Your Home Timeline">
+        <article data-testid="tweet" id="tweet-1">
+          <div>Tweet 1 content</div>
+        </article>
+        <article data-testid="tweet" id="tweet-2">
+          <div>Tweet 2 content</div>
+        </article>
+        <!-- Promoted tweet -->
+        <article data-testid="tweet" data-promoted="true" id="promoted-tweet">
+          <div data-testid="promotedIndicator">Promoted</div>
+          <div>Promoted tweet</div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Sidebar column -->
+    <div data-testid="sidebarColumn" id="sidebar">
+      <!-- Trending -->
+      <div data-testid="trend" id="trend-1">
+        <span>#Trending1</span>
+      </div>
+      <!-- Who to follow -->
+      <div data-testid="UserCell" id="who-to-follow-1">
+        <span>Suggested user</span>
+      </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div role="tablist">
+      <div role="tab" aria-selected="true" id="tab-foryou">For you</div>
+      <div role="tab" aria-selected="false" id="tab-following">Following</div>
+    </div>
+  </body>
+</html>

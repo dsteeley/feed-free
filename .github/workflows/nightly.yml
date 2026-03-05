@@ -1,0 +1,60 @@
+name: Nightly Selector Health Check
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # 02:00 UTC daily
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  selector-health:
+    name: Check Selectors
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Run selector health check
+        id: health
+        run: npm run selector:health
+        continue-on-error: true
+        env:
+          FACEBOOK_EMAIL: ${{ secrets.FACEBOOK_EMAIL }}
+          FACEBOOK_PASSWORD: ${{ secrets.FACEBOOK_PASSWORD }}
+
+      - name: Open issue if selectors are stale
+        if: steps.health.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Selectors stale — ${new Date().toISOString().slice(0, 10)}`;
+            const body = [
+              '## Selector Health Check Failed',
+              '',
+              'The nightly selector health check detected stale selectors.',
+              'One or more platform sites may have changed their DOM structure.',
+              '',
+              '**Action required:**',
+              '1. Run `npm run fixtures:update` to capture fresh DOM snapshots',
+              '2. Update selectors in `lib/selectors/<platform>.ts` to match new DOM',
+              '3. Run `npm test` and `npm run test:functional` to verify',
+              '4. Open a PR with the selector + fixture updates',
+              '',
+              `_Auto-created by nightly workflow on ${new Date().toISOString()}_`,
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['selectors', 'maintenance'],
+            });

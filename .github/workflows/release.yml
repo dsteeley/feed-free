@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Build, Sign & Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      # Run full test suite
+      - name: Unit tests
+        run: npm test
+
+      - name: Functional tests
+        run: npm run test:functional
+
+      - name: Install Playwright Firefox
+        run: npx playwright install firefox --with-deps
+
+      - name: Build Firefox
+        run: npm run build:firefox
+
+      - name: E2E tests
+        run: npm run test:e2e
+        env:
+          CI: true
+
+      - name: Build Chrome
+        run: npm run build
+
+      - name: Zip Firefox
+        run: npm run zip:firefox
+
+      - name: Zip Chrome
+        run: npm run zip
+
+      - name: Sign Firefox XPI
+        run: npm run sign:firefox:only
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
+          WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            web-ext-artifacts/*.zip
+            web-ext-artifacts/*.xpi
+          generate_release_notes: true

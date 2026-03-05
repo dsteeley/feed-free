@@ -1,0 +1,48 @@
+{
+  "name": "fb-focus",
+  "description": "Feed Free — Hide algorithmic feeds on Facebook, YouTube, Instagram, Twitter/X, and TikTok",
+  "private": true,
+  "license": "MIT",
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt --browser firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build --browser firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip --browser firefox",
+    "sign:firefox": "wxt build --browser firefox && web-ext sign --source-dir .output/firefox-mv2 --channel unlisted",
+    "sign:firefox:only": "web-ext sign --source-dir .output/firefox-mv2 --channel unlisted",
+    "release": "npm version patch && npm run sign:firefox",
+    "test": "vitest run --reporter=verbose lib/",
+    "test:watch": "vitest lib/",
+    "test:functional": "vitest run --reporter=verbose tests/functional/",
+    "test:e2e": "playwright test",
+    "test:all": "npm test && npm run test:functional && npm run test:e2e",
+    "selector:health": "node --loader ts-node/esm tests/health/check-selectors.ts",
+    "fixtures:update": "node --loader ts-node/esm tests/health/update-fixtures.ts",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "dotenv": "^17.3.1",
+    "eslint": "^8.57.0",
+    "jsdom": "^28.1.0",
+    "prettier": "^3.3.0",
+    "serve": "^14.2.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.0",
+    "vitest": "^4.0.18",
+    "web-ext": "^9.3.0",
+    "wxt": "^0.20.0"
+  },
+  "dependencies": {
+    "@wxt-dev/storage": "^1.2.8"
+  }
+}
