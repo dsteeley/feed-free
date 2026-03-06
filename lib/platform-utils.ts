@@ -174,35 +174,73 @@ export function createCooldownOverlay(
       (document.body || document.documentElement).appendChild(overlay);
     }
 
-    const label = platformLabel;
+    // Clear previous contents safely
+    while (overlay.firstChild) overlay.removeChild(overlay.firstChild);
+
+    function node<K extends keyof HTMLElementTagNameMap>(
+      tag: K,
+      style: string,
+      text?: string,
+      attrs?: Record<string, string>
+    ): HTMLElementTagNameMap[K] {
+      const el = document.createElement(tag);
+      el.style.cssText = style;
+      if (text) el.textContent = text;
+      if (attrs) for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+      return el;
+    }
+
     if (remainingMs > 0) {
-      overlay.innerHTML = `
-        <div style="font-size:48px;margin-bottom:16px">⏳</div>
-        <h2 style="font-size:22px;font-weight:700;margin:0 0 8px">${label} feed locked</h2>
-        <p style="font-size:15px;color:#555;margin:0 0 24px;max-width:320px">
-          You started a mindfulness pause. The feed will unlock in:
-        </p>
-        <div data-feedfree-countdown style="font-size:56px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-2px;color:#1877f2">
-          ${formatCountdown(remainingMs)}
-        </div>
-        <p style="font-size:13px;color:#999;margin-top:16px">
-          Refresh the page to cancel the timer.
-        </p>
-      `;
+      overlay.appendChild(node('div', 'font-size:48px;margin-bottom:16px', '⏳'));
+      overlay.appendChild(
+        node('h2', 'font-size:22px;font-weight:700;margin:0 0 8px', `${platformLabel} feed locked`)
+      );
+      overlay.appendChild(
+        node(
+          'p',
+          'font-size:15px;color:#555;margin:0 0 24px;max-width:320px',
+          'You started a mindfulness pause. The feed will unlock in:'
+        )
+      );
+      overlay.appendChild(
+        node(
+          'div',
+          'font-size:56px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-2px;color:#1877f2',
+          formatCountdown(remainingMs),
+          { 'data-feedfree-countdown': '' }
+        )
+      );
+      overlay.appendChild(
+        node(
+          'p',
+          'font-size:13px;color:#999;margin-top:16px',
+          'Refresh the page to cancel the timer.'
+        )
+      );
     } else {
-      // No cooldown active — show "start timer" prompt
-      overlay.innerHTML = `
-        <div style="font-size:48px;margin-bottom:16px">🔒</div>
-        <h2 style="font-size:22px;font-weight:700;margin:0 0 8px">${label} feed is hidden</h2>
-        <p style="font-size:15px;color:#555;margin:0 0 24px;max-width:320px">
-          Need to check it? Start a 5-minute mindfulness pause, then it'll open for 30 minutes.
-        </p>
-        <button data-feedfree-start style="
-          background:#1877f2;color:#fff;border:none;border-radius:8px;
-          padding:14px 28px;font-size:16px;font-weight:600;cursor:pointer;
-        ">Start 5-minute timer</button>
-      `;
-      overlay.querySelector('[data-feedfree-start]')?.addEventListener('click', startCooldown);
+      overlay.appendChild(node('div', 'font-size:48px;margin-bottom:16px', '🔒'));
+      overlay.appendChild(
+        node(
+          'h2',
+          'font-size:22px;font-weight:700;margin:0 0 8px',
+          `${platformLabel} feed is hidden`
+        )
+      );
+      overlay.appendChild(
+        node(
+          'p',
+          'font-size:15px;color:#555;margin:0 0 24px;max-width:320px',
+          "Need to check it? Start a 5-minute mindfulness pause, then it'll open for 30 minutes."
+        )
+      );
+      const btn = node(
+        'button',
+        'background:#1877f2;color:#fff;border:none;border-radius:8px;padding:14px 28px;font-size:16px;font-weight:600;cursor:pointer',
+        'Start 5-minute timer',
+        { 'data-feedfree-start': '' }
+      );
+      btn.addEventListener('click', startCooldown);
+      overlay.appendChild(btn);
     }
   }
 

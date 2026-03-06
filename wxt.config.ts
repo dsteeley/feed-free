@@ -16,7 +16,8 @@ export default defineConfig({
         id: 'feed-free@feedfree.ext',
         strict_min_version: '109.0',
         data_collection_permissions: {
-          required: false,
+          required: [],
+          optional: [],
         },
       },
       gecko_android: {
