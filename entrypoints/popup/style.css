@@ -6,8 +6,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  /* Responsive for Firefox Android extension panel */
-  width: min(320px, 100vw);
+  width: 320px;
   background: #fff;
   color: #1a1a1a;
 }

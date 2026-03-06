@@ -1,13 +1,8 @@
 import { hide } from '../css-builder';
 
 export const FB_SELECTORS = {
-  // Home feed — main content posts
-  feed: [
-    '[data-pagelet="FeedUnit_0"]',
-    '[data-pagelet^="FeedUnit_"]',
-    '[role="main"] [data-pagelet="Feed"]',
-    '[role="main"] > div > div > div > div',
-  ],
+  // Home feed — individual post units and feed container (targeted, preserves left nav)
+  feed: ['[data-pagelet^="FeedUnit_"]', '[role="main"] [data-pagelet="Feed"]'],
   // Stories tray at top of home feed
   stories: ['[data-pagelet="Stories"]', '[data-testid="stories_tray"]', '[aria-label="Stories"]'],
   // Right sidebar (Sponsored, People You May Know, etc.)
@@ -24,20 +19,19 @@ export function buildFbCss(): string {
   const home = 'html.fbfocus-hide-feed[data-fbfocus-page="home"]';
   const feed = 'html.fbfocus-hide-feed';
   const reels = 'html.fbfocus-hide-reels';
-  const watch = 'html.fbfocus-hide-reels[data-fbfocus-page="watch"]';
 
   return [
-    // Feed — home only (broad hide of main area)
-    `${home} [role="main"] > * { display: none !important; }`,
+    // Feed units — home only, targeted (preserves left nav / Groups / Marketplace / Messenger)
+    hide(home, FB_SELECTORS.feed),
     // Keep cooldown overlay visible
     `${home} [data-feedfree-overlay] { display: flex !important; }`,
     // Stories — home only
     hide(home, FB_SELECTORS.stories),
     // Right rail — everywhere feed class is active
     hide(feed, FB_SELECTORS.rightRail),
-    // Reels — articles tagged by MutationObserver
+    // Reels inline in feed — articles tagged by MutationObserver
     hide(reels, FB_SELECTORS.reelTagged),
-    // Watch/reel pages — broad hide
-    `${watch} [role="main"] > * { display: none !important; }`,
+    // Reels/Watch dedicated pages
+    hide(reels, FB_SELECTORS.reels),
   ].join('\n');
 }
