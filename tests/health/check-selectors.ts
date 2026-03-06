@@ -23,12 +23,14 @@ interface SelectorCheck {
   platform: string;
   url: string;
   selectors: Record<string, readonly string[]>;
+  requiresAuth?: boolean;
 }
 
 const CHECKS: SelectorCheck[] = [
   {
     platform: 'Facebook',
     url: 'https://www.facebook.com/',
+    requiresAuth: true,
     selectors: {
       feed: FB_SELECTORS.feed,
       stories: FB_SELECTORS.stories,
@@ -46,6 +48,7 @@ const CHECKS: SelectorCheck[] = [
   {
     platform: 'Instagram',
     url: 'https://www.instagram.com/',
+    requiresAuth: true,
     selectors: {
       homeFeed: IG_SELECTORS.homeFeed,
     },
@@ -108,10 +111,19 @@ async function checkPlatform(
 async function main() {
   console.log('Feed Free — Selector Health Check\n');
 
+  const hasCredentials = !!process.env.FACEBOOK_EMAIL;
+  if (!hasCredentials) {
+    console.log('No credentials found (FACEBOOK_EMAIL not set) — skipping auth-required platforms.\n');
+  }
+
   const browser = await chromium.launch({ headless: true });
   const allStale: string[] = [];
 
   for (const check of CHECKS) {
+    if (check.requiresAuth && !hasCredentials) {
+      console.log(`Skipping ${check.platform} (requires auth — set FACEBOOK_EMAIL in .env)`);
+      continue;
+    }
     console.log(`Checking ${check.platform} (${check.url})...`);
     const { stale } = await checkPlatform(browser, check);
     allStale.push(...stale);
