@@ -113,7 +113,9 @@ async function main() {
 
   const hasCredentials = !!process.env.FACEBOOK_EMAIL;
   if (!hasCredentials) {
-    console.log('No credentials found (FACEBOOK_EMAIL not set) — skipping auth-required platforms.\n');
+    console.log(
+      'No credentials found (FACEBOOK_EMAIL not set) — skipping auth-required platforms.\n'
+    );
   }
 
   const browser = await chromium.launch({ headless: true });
