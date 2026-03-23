@@ -40,7 +40,7 @@
     "typescript": "^5.7.0",
     "vitest": "^4.0.18",
     "web-ext": "^9.3.0",
-    "wxt": "^0.20.0"
+    "wxt": "^0.20.20"
   },
   "dependencies": {
     "@wxt-dev/storage": "^1.2.8"
