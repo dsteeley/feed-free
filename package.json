@@ -37,7 +37,7 @@
     "prettier": "^3.3.0",
     "serve": "^14.2.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.0",
+    "typescript": "^6.0.2",
     "vitest": "^4.0.18",
     "web-ext": "^9.3.0",
     "wxt": "^0.20.0"
